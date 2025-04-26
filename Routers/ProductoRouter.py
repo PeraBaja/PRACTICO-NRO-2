@@ -1,5 +1,4 @@
-from http.client import HTTPException
-from fastapi import APIRouter, status, Body
+from fastapi import APIRouter, status, Body, HTTPException
 from Modelos.Producto import Producto
 from BD.bd import productos
 from Servicios.CategoríaServicio import existe_categoría_con_id
