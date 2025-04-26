@@ -6,12 +6,6 @@ from Servicios.CategoríaServicio import existe_categoría_con_id
 router = APIRouter()
 
 
-# Lo hago así profe para que esté más ordenado
-@router.get("/")
-def hello_world():
-    return {"hello": "word"}
-
-
 @router.get("/", tags=["Productos"], response_model=list[Producto])
 def obtener_productos() -> list[dict]:
     return productos
