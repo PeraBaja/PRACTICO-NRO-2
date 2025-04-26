@@ -1,5 +1,12 @@
 from enum import StrEnum
-from pydantic import BaseModel, Field, PositiveInt, Secret, field_validator, EmailStr
+from pydantic import (
+    BaseModel,
+    Field,
+    PositiveInt,
+    field_validator,
+    EmailStr,
+    SecretStr,
+)
 
 
 class Rol(StrEnum):
@@ -7,13 +14,10 @@ class Rol(StrEnum):
     Adminstrador = "administrador"
 
 
-secret_str = Secret[str]
-
-
 class Usuario(BaseModel):
     id: PositiveInt
     nombre: str
-    password: secret_str = Field(min_length=8)
+    password: SecretStr
     país: str
     ciudad: str
     teléfono: str
@@ -21,5 +25,13 @@ class Usuario(BaseModel):
     rol: Rol
 
     @field_validator("password")
-    def validar_primera_letra_mayusculas(value: str):
-        return value[0].isupper()
+    def validar_al_menos_una_letra_mayusculas(cls, valor: SecretStr):
+        if valor.get_secret_value().islower():
+            raise ValueError("Debe contener al menos una letra mayuscula")
+        return valor
+
+    @field_validator("password")
+    def validar_longitud_minima_contraseña(cls, valor: SecretStr):
+        if len(valor.get_secret_value()) < 8:
+            raise ValueError("La contraseña debe tener al menos 8 caraceres")
+        return valor
