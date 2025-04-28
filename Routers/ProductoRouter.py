@@ -1,4 +1,5 @@
-from fastapi import APIRouter, status, Body, HTTPException
+from typing import Optional
+from fastapi import APIRouter, Query, status, Body, HTTPException
 from Modelos.Producto import Producto
 from BD.bd import productos
 from Servicios.CategoríaServicio import (
