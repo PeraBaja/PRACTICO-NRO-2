@@ -1,13 +1,18 @@
 from fastapi import APIRouter, status, Body, HTTPException
 from Modelos.Producto import Producto
 from BD.bd import productos
-from Servicios.CategoríaServicio import existe_categoría_con_id
+from Servicios.CategoríaServicio import (
+    existe_categoría_con_id,
+    obtener_categoría_con_descripción,
+)
 
 router = APIRouter()
 
 
 @router.get("/", tags=["Productos"], response_model=list[Producto])
-def obtener_productos() -> list[dict]:
+def obtener_productos(nombre_categoría: Optional[str] = None) -> list[dict]:
+    if nombre_categoría:
+        return obtener_productos_por_categoría(nombre_categoría)
     return productos
 
 
@@ -55,11 +60,18 @@ def eliminar_producto(id: int):
     productos.remove(producto_seleccionado)
 
 
-@router.get("/", tags=["Productos"], response_model=Producto)
-def obtener_producto_por_categoría(categoría: str):
-    for producto in productos:
-        if producto["categoría"].casefold() == categoría.casefold():
-            return producto
+def obtener_productos_por_categoría(nombre_categoría: str):
+    categoría = obtener_categoría_con_descripción(nombre_categoría)
+    if not categoría:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Categoría no existente"
+        )
+    productos_filtrados = list(
+        filter(lambda producto: producto["id_categoría"] == categoría["id"], productos)
+    )
+    if productos_filtrados:
+        return productos_filtrados
+
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND, detail="Producto no encontrado"
     )
