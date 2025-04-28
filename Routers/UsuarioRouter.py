@@ -23,13 +23,7 @@ def obtener_usuario_por_id(id: int):
 
 @router.post("/", tags=["Usuarios"], status_code=status.HTTP_201_CREATED)
 def agregar_usuario(usuario: Usuario):
-    if existe_categoría_con_id(usuario.id_categoría):
-        usuarios.append(usuario.__dict__)
-        return
-    raise HTTPException(
-        status_code=status.HTTP_400_BAD_REQUEST,
-        detail="No se ha podido crear. Categoría no existente",
-    )
+    usuarios.append(usuario.__dict__)
 
 
 @router.put("/{id}", tags=["Usuarios"], response_model=Usuario)
@@ -38,18 +32,11 @@ def modificar_usuario(id, usuario: Usuario = Body()):
     try:
         i = usuarios.index(usuario_seleccionado)
     except IndexError:
-        return
-    if existe_categoría_con_id(usuarios[i].id_categoría):
         usuarios[i] = usuario.__dict__
         return usuario.__dict__
-    raise HTTPException(
-        status_code=status.HTTP_400_BAD_REQUEST,
-        detail="No se ha podido modificar. Categoría no existente",
-    )
 
 
 @router.delete("/{id}", tags=["Usuarios"], status_code=status.HTTP_204_NO_CONTENT)
 def eliminar_usuario(id: int):
     usuario_seleccionado = obtener_usuario_por_id(id)
-
     usuarios.remove(usuario_seleccionado)
