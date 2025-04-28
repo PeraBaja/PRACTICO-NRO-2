@@ -9,7 +9,7 @@ router = APIRouter()
 # Lo hago así profe para que esté más ordenado
 
 
-@router.get("/", tags=["Productos"], response_model=list[Categoría])
+@router.get("/", tags=["Categorías"], response_model=list[Categoría])
 def obtener_categorías() -> list[dict]:
     return categorías
 
