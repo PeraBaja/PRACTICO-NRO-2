@@ -3,7 +3,7 @@ from Modelos.Producto import Producto
 from Modelos.Venta import Venta
 from Modelos.Usuario import Usuario
 from Modelos.Venta import Venta
-from Routers import ProductoRouter, CategoríaRouter, UsuarioRouter
+from Routers import ProductoRouter, CategoríaRouter, VentaRouter, UsuarioRouter
 
 app = FastAPI()
 
@@ -13,3 +13,4 @@ app.version = "0.0.∞"
 app.router.include_router(ProductoRouter.router, prefix="/productos")
 app.router.include_router(CategoríaRouter.router, prefix="/categorias")
 app.router.include_router(UsuarioRouter.router, prefix="/usuarios")
+app.router.include_router(VentaRouter.router, prefix="/ventas")
